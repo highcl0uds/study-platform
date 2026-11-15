@@ -1,0 +1,9 @@
+# Прод: схема не меняется автоматически (validate), демо-данные не загружаются.
+# DB_URL / DB_USERNAME / DB_PASSWORD задаются переменными окружения; без верного пароля PostgreSQL отклонит подключение.
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:validate}
+logging:
+  level:
+    root: INFO

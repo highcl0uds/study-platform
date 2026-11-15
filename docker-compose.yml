@@ -1,0 +1,32 @@
+# Запуск: cp .env.example .env && docker compose up --build
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-study_platform}
+      POSTGRES_USER: ${DB_USERNAME:-study}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Задайте DB_PASSWORD в файле .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-study} -d ${DB_NAME:-study_platform}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-study_platform}
+      DB_USERNAME: ${DB_USERNAME:-study}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SEED_DEMO_DATA: "true"
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

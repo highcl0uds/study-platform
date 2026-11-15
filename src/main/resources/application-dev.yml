@@ -1,0 +1,10 @@
+# Локальная разработка: SQL в логах и демо-данные при первом запуске
+spring:
+  jpa:
+    show-sql: false
+logging:
+  level:
+    com.example.studyplatform: DEBUG
+    org.hibernate.SQL: DEBUG
+app:
+  seed-demo-data: ${SEED_DEMO_DATA:true}
